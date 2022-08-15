@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/carniceria/static/css/main.af64ce03.css",
-    "main.js": "/carniceria/static/js/main.d7214335.js",
+    "main.js": "/carniceria/static/js/main.61861a77.js",
     "index.html": "/carniceria/index.html",
     "main.af64ce03.css.map": "/carniceria/static/css/main.af64ce03.css.map",
-    "main.d7214335.js.map": "/carniceria/static/js/main.d7214335.js.map"
+    "main.61861a77.js.map": "/carniceria/static/js/main.61861a77.js.map"
   },
   "entrypoints": [
     "static/css/main.af64ce03.css",
-    "static/js/main.d7214335.js"
+    "static/js/main.61861a77.js"
   ]
 }
