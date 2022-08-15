@@ -25,6 +25,7 @@ const InputsContianer = styled.div`
    margin:auto;
    display:flex;
    justify-content: space-evenly;
+
 `;
 const Label = styled.label`
     font-size: 1.2rem;
@@ -36,11 +37,13 @@ const Input = styled.div`
    margin:auto;
    width: 100%;
    display:flex;
+   
    input{
     padding: .5rem;
     border-radius: 5px 0 0 5px;
     margin:  0;
     border-style:none;
+    width:100%;
    }
    div{
     background-color: #343434;
@@ -129,7 +132,7 @@ export const Costos = () => {
       {
         (showData) &&
           <>
-            <Title>Costos del <span className='txt-price'>{`${today.getDate()}/${today.getMonth()}`}</span></Title>
+            <Title>Costos al <span className='txt-price'>{`${today.getDate()}/${today.getMonth()}`}</span></Title>
 
             <InputsContianer>
               <div>

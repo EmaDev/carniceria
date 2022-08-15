@@ -1,4 +1,4 @@
-import { collection, query, where, getDocs, getFirestore, doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
+import { getFirestore, doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { app } from './config';
 const db = getFirestore(app);
 
@@ -15,7 +15,7 @@ const MES_ACTUAL = MESES[new Date().getMonth()].mes;
 
 export const getVentasDelDia = async () => {
 
-    const docRef = doc(db, "carniceria", 'ventasNuevo', MES_ACTUAL, '14');
+    const docRef = doc(db, "carniceria", 'ventasNuevo', MES_ACTUAL, DIA_ACTUAL);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
@@ -28,7 +28,7 @@ export const getVentasDelDia = async () => {
 export const createNewSale = async (data: any) => {
 
     try {
-        const docRef = doc(db, "carniceria", "ventasNuevo", MES_ACTUAL, "14");
+        const docRef = doc(db, "carniceria", "ventasNuevo", MES_ACTUAL, DIA_ACTUAL);
         await updateDoc(docRef, {
             ventas: arrayUnion({
                 id: data.id,
@@ -44,7 +44,7 @@ export const createNewSale = async (data: any) => {
 }
 
 export const removeSale = async (data: any) => {
-    const docRef = doc(db, "carniceria", "ventasNuevo", MES_ACTUAL, "14");
+    const docRef = doc(db, "carniceria", "ventasNuevo", MES_ACTUAL, DIA_ACTUAL);
 
     await updateDoc(docRef, {
         ventas: arrayRemove({
