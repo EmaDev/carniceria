@@ -4,6 +4,7 @@ import { BiSave } from 'react-icons/bi';
 import { HiLockClosed } from 'react-icons/hi';
 import { getPreciosCompra, setPreciosCompra } from '../firebase/queries';
 import Swal from 'sweetalert2';
+import { CostoForm } from './CostoForm';
 
 const Container = styled.div`
    margin: 1rem;
@@ -76,7 +77,7 @@ const ButtonLock = styled.div`
 const today = new Date();
 export const Costos = () => {
   
-  const [showData, setShowData] = useState(true);
+  const [showData, setShowData] = useState(false);
   
   const [precios, setPrecios] = useState<any>({carne: 0, pollo: 0});
   const {carne, pollo} = precios;
@@ -134,30 +135,7 @@ export const Costos = () => {
           <>
             <Title>Costos al <span className='txt-price'>{`${today.getDate()}/${today.getMonth()}`}</span></Title>
 
-            <InputsContianer>
-              <div>
-                <Label>Carne</Label>
-                <Input>
-                  <input type={'number'} 
-                  placeholder={'Precio por kilo'}
-                  value={carne}
-                  name={'carne'}
-                  onChange={handleForm}
-                  />
-                  <div onClick={() => handleSumbit('carne')}><BiSave /></div>
-                </Input>
-              </div>
-              <div><Label>Pollo</Label>
-                <Input>
-                  <input type={'number'} 
-                  value={pollo}
-                  name={'pollo'}
-                  placeholder={'Precio por kilo'}
-                  onChange={handleForm}
-                  />
-                  <div onClick={() => handleSumbit('pollo')}><BiSave /></div>
-                </Input></div>
-            </InputsContianer>
+            
           </>
       }
     </Container>

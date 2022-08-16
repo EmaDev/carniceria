@@ -71,7 +71,7 @@ const initialState: Form = {
 }
 export const NuevaVenta = () => {
 
-    const {updateTotalAmount, setIsLoading} = useContext(SalesContext);
+    const {updateTotalAmount, setIsLoading, getSales} = useContext(SalesContext);
     const [formValues, setForm] = useState<Form>(initialState);
     const { category, amount } = formValues;
 
@@ -83,8 +83,10 @@ export const NuevaVenta = () => {
         })
     }
 
-    const handleOnSubmit = async ({target} : any) => {
+    const handleOnSubmit = async (e : any) => {
     
+        e.preventDefault();
+
         setIsLoading(true);
         
         if (category !== '' && parseInt(amount) <= 0 || parseInt(amount) > 30000) {
@@ -118,6 +120,7 @@ export const NuevaVenta = () => {
         });
         setIsLoading(false);
         
+        getSales();
         return Swal.fire({
             position: 'top-end',
             icon: 'success',
@@ -145,10 +148,10 @@ export const NuevaVenta = () => {
                     value={amount}
                     onChange={setFormValues}
                 />
-                <Submit type={'button'}
-                    onClick={handleOnSubmit}>
+                <Submit type={'submit'} onClick={handleOnSubmit}>
                     Guardar
                 </Submit>
+                
             </form>
 
         </Container >
