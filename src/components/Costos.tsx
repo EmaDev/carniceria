@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { BiSave } from 'react-icons/bi';
-import { HiLockClosed } from 'react-icons/hi';
+import { HiLockClosed, HiLockOpen } from 'react-icons/hi';
 import { getPreciosCompra, setPreciosCompra } from '../firebase/queries';
 import Swal from 'sweetalert2';
 import { CostoForm } from './CostoForm';
@@ -76,67 +75,49 @@ const ButtonLock = styled.div`
 
 const today = new Date();
 export const Costos = () => {
-  
+
   const [showData, setShowData] = useState(false);
-  
-  const [precios, setPrecios] = useState<any>({carne: 0, pollo: 0});
-  const {carne, pollo} = precios;
-  useEffect( () => {
 
-    const getPrecios = async() => {
-      const resp = await getPreciosCompra();
-      if(resp.ok){
-        setPrecios(resp.data);
-      }
-    }
+  const [precios, setPrecios] = useState<any[]>([]);
+
+  useEffect(() => {
     getPrecios();
-  },[]);
+  }, []);
 
-  const handleForm = ({target}:any) => {
-    setPrecios({
-      ...precios,
-      [target.name]: target.value
-    })
-  }
-
-  const handleSumbit = async(category:string) => {
-    if(precios[category] <= 0){
-      
-      return Swal.fire({
-        icon: 'error',
-        title: 'Error...',
-        text: 'Utiliza un precio valido',
-      }); 
-    }
-
-    const resp = await setPreciosCompra({[category]: precios[category]});
-    if(resp.ok){
-      return Swal.fire({
-        position: 'top-end',
-        icon: 'success',
-        title: 'Guardado correctamente',
-        showConfirmButton: false,
-        timer: 1500
-      })
-    }else{
-      return Swal.fire({
-        icon: 'error',
-        title: 'Error...',
-        text: 'Ocurrio un error',
-      }); 
+  const getPrecios = async () => {
+    const resp = await getPreciosCompra();
+    if (resp.ok) {
+      setPrecios(resp.data);
     }
   }
 
   return (
     <Container>
-      <ButtonLock onClick={() => setShowData(!showData)}><HiLockClosed /></ButtonLock>
+      <ButtonLock onClick={() => setShowData(!showData)}>
+        {(showData) ? <HiLockOpen />
+          : <HiLockClosed />
+        }
+
+      </ButtonLock>
       {
         (showData) &&
-          <>
-            <Title>Costos al <span className='txt-price'>{`${today.getDate()}/${today.getMonth()}`}</span></Title>
+        <>
+          <Title>Costos al <span className='txt-price'>{`${today.getDate()}/${today.getMonth()}`}</span></Title>
 
-            
-          </>
+          {
+            precios.map(item => (
+              <CostoForm
+                key={item[0]}
+                title={item[0]}
+                id={item[1].id}
+                precio={item[1].precio}
+                kilogramos={item[1].kilogramos}
+                reload={getPrecios}
+              />
+            ))
+          }
+
+        </>
       }
     </Container>
   )

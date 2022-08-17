@@ -1,4 +1,4 @@
-import { getFirestore, doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
+import { getFirestore, doc, getDoc, updateDoc, arrayUnion, arrayRemove, orderBy } from "firebase/firestore";
 import { app } from './config';
 const db = getFirestore(app);
 
@@ -55,16 +55,18 @@ export const removeSale = async (data: any) => {
     });
 }
 
+
 export const getPreciosCompra = async () => {
 
     const docRef = doc(db, 'carniceria', 'precios-compra');
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-        return { ok: true, data: docSnap.data() };
+        const orden:any = Object.entries(docSnap.data()).sort( (a, b) => {return a[1].id - b[1].id} );
+        return { ok: true, data: orden};
     }
 
-    return { ok: false, data: {} };
+    return { ok: false, data: [] };
 }
 export const setPreciosCompra = async (data: any) => {
     try {
@@ -74,6 +76,7 @@ export const setPreciosCompra = async (data: any) => {
         });
         return {ok:true}
     } catch (error) {
+        console.log(error);
         return {ok:false}
     }
 
