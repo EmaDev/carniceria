@@ -10,7 +10,12 @@ const Container = styled.div`
   background-color: #9C9C9C;
   position:relative;
 `;
-
+const Title = styled.h2`
+   margin: 1rem;
+   font-size: 1.7rem;
+   font-weight: 700;
+   text-transform: uppercase;
+`;
 const Total = styled.div`
    width: 90%;
    margin: 1rem auto;
@@ -64,7 +69,7 @@ export const VentasAnteriores = () => {
   return (
     <Container>
         
-        <h2 className='title'>Ventas del dia</h2>
+        <Title>Ventas del dia</Title>
         <span className='subTitle'>Total</span>
         <Total>
             <div onClick={ () => {setShowTotal(!showTotalActive)}}>

@@ -77,7 +77,7 @@ export const setPreciosCompra = async (data: any) => {
 export const getVentasPorMes = async (month: string) => {
 
     const q = query(collection(db, "carniceria", "ventasNuevo", month), 
-    orderBy("fecha"), where("fecha", "<=", parseInt(DIA_ACTUAL)));
+    orderBy("fecha")/*, where("fecha", "<=", parseInt(DIA_ACTUAL))*/);
 
     const querySnapshot = await getDocs(q);
     const arrData:any = [];

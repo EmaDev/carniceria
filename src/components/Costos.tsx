@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { HiLockClosed, HiLockOpen } from 'react-icons/hi';
-import { getPreciosCompra, setPreciosCompra } from '../firebase/queries';
+import { getPreciosCompra} from '../firebase/queries';
 import { CostoForm } from './CostoForm';
 
 const Container = styled.div`

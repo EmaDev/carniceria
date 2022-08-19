@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
+import { HiLockClosed, HiLockOpen } from 'react-icons/hi';
 import { getVentasPorMes } from '../firebase/queries';
 import { MESES, totalCalculator } from '../helpers';
 
@@ -41,10 +42,24 @@ const Button = styled.button`
     tranisition .5s ease;
   }
 `;
+const ButtonLock = styled.div`
+   position: absolute;
+   right:1rem;
+   top: 1rem;
+   font-size: 2rem;
+   color: #000;
+   cursor:pointer;
+
+   &:hover{
+    right: 1.5rem;
+    transition: .4s;
+   }
+`;
 
 export const HistorialDeVentas = () => {
 
     const [ventasTotales, setVentasTotales] = useState<any[]>([]);
+    const [showData, setShowData] = useState(false);
     const selectRef: any = useRef();
 
     const handleFiltrar = async () => {
@@ -52,16 +67,16 @@ export const HistorialDeVentas = () => {
         setVentasTotales(resp);
     }
 
-    const calcularImporteTotal = (ventas:any[]) => {
+    const calcularImporteTotal = (ventas: any[]) => {
         let importe = 0;
-        if(ventas.length > 0){
-           ventas.forEach( venta => {
-            if(venta['precio']){
-                importe += venta.precio;
-            }else{
-                importe += venta.importe;
-            }
-           })
+        if (ventas.length > 0) {
+            ventas.forEach(venta => {
+                if (venta['precio']) {
+                    importe += venta.precio;
+                } else {
+                    importe += venta.importe;
+                }
+            })
         }
 
         return `$ ${importe}`
@@ -69,39 +84,50 @@ export const HistorialDeVentas = () => {
 
     return (
         <Container>
-            <Title>Historial</Title>
+            <ButtonLock onClick={() => setShowData(!showData)}>
+                {(showData) ? <HiLockOpen />
+                    : <HiLockClosed />
+                }
 
-            <div style={{ display: 'flex', margin: '1rem 0' }}>
-                <Select ref={selectRef}>
-                    {
-                        MESES.map(mes => (
-                            <option key={mes.id} value={mes.mes}>{mes.mes}</option>
-                        ))
-                    }
-                </Select>
-                <Button onClick={handleFiltrar}>Filtrar</Button>
-            </div>
+            </ButtonLock>
+            {
+                showData &&
+                <>
+                    <Title>Historial</Title>
 
-            <table>
-                <thead className='tableHead'>
-                    <tr className='tableHead'>
-                        <td className='tableHeadItem'>Fecha</td>
-                        <td className='tableHeadItem'>importe total</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        ventasTotales.map( venta => (
-                            <tr key={venta.fecha}>
-                                <td className='tdBody txt-price'>{venta.fecha}</td>
-                                <td className='tdBody txt-right txt-price'>
-                                    {calcularImporteTotal(venta.ventas)}
-                                </td>
+                    <div style={{ display: 'flex', margin: '1rem 0' }}>
+                        <Select ref={selectRef}>
+                            {
+                                MESES.map(mes => (
+                                    <option key={mes.id} value={mes.mes}>{mes.mes}</option>
+                                ))
+                            }
+                        </Select>
+                        <Button onClick={handleFiltrar}>Filtrar</Button>
+                    </div>
+
+                    <table>
+                        <thead className='tableHead'>
+                            <tr className='tableHead'>
+                                <td className='tableHeadItem'>Fecha</td>
+                                <td className='tableHeadItem'>importe total</td>
                             </tr>
-                        ))
-                    }
-                </tbody>
-            </table>
+                        </thead>
+                        <tbody>
+                            {
+                                ventasTotales.map(venta => (
+                                    <tr key={venta.fecha}>
+                                        <td className='tdBody txt-price'>{venta.fecha}</td>
+                                        <td className='tdBody txt-right txt-price'>
+                                            {calcularImporteTotal(venta.ventas)}
+                                        </td>
+                                    </tr>
+                                ))
+                            }
+                        </tbody>
+                    </table>
+                </>
+            }
         </Container>
     )
 }

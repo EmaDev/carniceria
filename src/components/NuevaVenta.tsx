@@ -11,6 +11,12 @@ const Container = styled.div`
   background-color: #BEBEBE;
   position:relative;
 `;
+const Title = styled.h2`
+   margin: 1rem;
+   font-size: 1.7rem;
+   font-weight: 700;
+   text-transform: uppercase;
+`;
 
 const Input = styled.input`
    border-style: none;
@@ -71,7 +77,7 @@ const initialState: Form = {
 }
 export const NuevaVenta = () => {
 
-    const {updateTotalAmount, setIsLoading, getSales} = useContext(SalesContext);
+    const { updateTotalAmount, setIsLoading, getSales } = useContext(SalesContext);
     const [formValues, setForm] = useState<Form>(initialState);
     const { category, amount } = formValues;
 
@@ -79,22 +85,33 @@ export const NuevaVenta = () => {
     const setFormValues = ({ target }: any) => {
         setForm({
             ...formValues,
-            [target.name]: (target.name === 'amount' ? parseInt(target.value) : target.value) 
+            [target.name]: (target.name === 'amount' ? parseInt(target.value) : target.value)
         })
     }
 
-    const handleOnSubmit = async (e : any) => {
-    
+    const handleOnSubmit = async (e: any) => {
+
         e.preventDefault();
+        e.target.disabled = true;
 
         setIsLoading(true);
-        
-        if (category !== '' && parseInt(amount) <= 0 || parseInt(amount) > 30000) {
+
+        if (category === '') {
             setIsLoading(false);
+            e.target.disabled = false;
             return Swal.fire({
                 icon: 'error',
                 title: 'Error...',
-                text: 'Completa los campos correctamente!'
+                text: 'Selecciona una categoria'
+            });
+        }
+        if (amount === '' || parseInt(amount) <= 0 || parseInt(amount) > 50000) {
+            setIsLoading(false);
+            e.target.disabled = false;
+            return Swal.fire({
+                icon: 'error',
+                title: 'Error...',
+                text: 'Escribe un importe valido'
             });
         }
 
@@ -104,23 +121,25 @@ export const NuevaVenta = () => {
             id: uuidv4()
         });
 
+        setForm({
+            category: 'Carne',
+            amount: ''
+        });
+
+        setIsLoading(false);
+        e.target.disabled = false;
+
         if (!resp.ok) {
-            Swal.fire({
+            return Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
                 text: 'No se pudo registrar la venta!',
             })
         }
-        
+
         updateTotalAmount(parseInt(amount));
-        
-        setForm({
-            category: 'Carne',
-            amount: ''
-        });
-        setIsLoading(false);
-        
         getSales();
+
         return Swal.fire({
             position: 'top-end',
             icon: 'success',
@@ -131,7 +150,7 @@ export const NuevaVenta = () => {
     }
     return (
         <Container>
-            <h2 className='title'>Nueva Venta</h2>
+            <Title>Nueva Venta</Title>
             <form>
                 <span className='subTitle'>Categoria</span>
 
@@ -148,10 +167,10 @@ export const NuevaVenta = () => {
                     value={amount}
                     onChange={setFormValues}
                 />
-                <Submit type={'submit'} onClick={handleOnSubmit}>
+                <Submit type={'submit'} disabled={false} onClick={handleOnSubmit}>
                     Guardar
                 </Submit>
-                
+
             </form>
 
         </Container >
