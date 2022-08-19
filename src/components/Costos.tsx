@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { HiLockClosed, HiLockOpen } from 'react-icons/hi';
 import { getPreciosCompra, setPreciosCompra } from '../firebase/queries';
-import Swal from 'sweetalert2';
 import { CostoForm } from './CostoForm';
 
 const Container = styled.div`
@@ -18,45 +17,6 @@ const Title = styled.h2`
    font-size: 1.4rem;
    font-weight: 700;
    text-transform: uppercase;
-`;
-
-const InputsContianer = styled.div`
-   width: 100%;
-   margin:auto;
-   display:flex;
-   justify-content: space-evenly;
-
-`;
-const Label = styled.label`
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin: .5rem;
-    display: block;
-`;
-const Input = styled.div`
-   margin:auto;
-   width: 100%;
-   display:flex;
-   
-   input{
-    padding: .5rem;
-    border-radius: 5px 0 0 5px;
-    margin:  0;
-    border-style:none;
-    width:100%;
-   }
-   div{
-    background-color: #343434;
-    padding: .5rem;
-    align-items:center;
-    color:#fff;
-    border-radius:  0 5px 5px 0;
-    cursor:pointer;
-    &:hover{
-      color:#e1e1e1;
-      background-color: #242424;
-    }
-   }
 `;
 
 const ButtonLock = styled.div`

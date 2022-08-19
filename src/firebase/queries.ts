@@ -1,16 +1,8 @@
-import { getFirestore, doc, getDoc, updateDoc, arrayUnion, arrayRemove, orderBy } from "firebase/firestore";
+import { getFirestore, doc, getDoc, updateDoc, arrayUnion, arrayRemove, orderBy, query, collection, getDocs, where } from "firebase/firestore";
 import { app } from './config';
+import {MESES,DIA_ACTUAL,MES_ACTUAL} from '../helpers/index';
 const db = getFirestore(app);
 
-const MESES = [
-    { id: 1, mes: 'enero' }, { id: 2, mes: 'febrero' }, { id: 3, mes: 'marzo' },
-    { id: 4, mes: 'abril' }, { id: 5, mes: 'mayo' }, { id: 6, mes: 'junio' },
-    { id: 7, mes: 'julio' }, { id: 8, mes: 'agosto' }, { id: 9, mes: 'septiembre' },
-    { id: 10, mes: 'octubre' }, { id: 11, mes: 'noviembre' }, { id: 12, mes: 'diciembre' }
-];
-
-const DIA_ACTUAL = new Date().getDate().toString();
-const MES_ACTUAL = MESES[new Date().getMonth()].mes;
 
 
 export const getVentasDelDia = async () => {
@@ -62,8 +54,8 @@ export const getPreciosCompra = async () => {
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-        const orden:any = Object.entries(docSnap.data()).sort( (a, b) => {return a[1].id - b[1].id} );
-        return { ok: true, data: orden};
+        const orden: any = Object.entries(docSnap.data()).sort((a, b) => { return a[1].id - b[1].id });
+        return { ok: true, data: orden };
     }
 
     return { ok: false, data: [] };
@@ -74,10 +66,28 @@ export const setPreciosCompra = async (data: any) => {
         await updateDoc(docRef, {
             ...data
         });
-        return {ok:true}
+        return { ok: true }
     } catch (error) {
         console.log(error);
-        return {ok:false}
+        return { ok: false }
     }
 
+}
+
+export const getVentasPorMes = async (month: string) => {
+
+    const q = query(collection(db, "carniceria", "ventasNuevo", month), 
+    orderBy("fecha"), where("fecha", "<=", parseInt(DIA_ACTUAL)));
+
+    const querySnapshot = await getDocs(q);
+    const arrData:any = [];
+    querySnapshot.forEach((doc) => {
+        const {fecha, ventas} = doc.data();
+        const monthNumber = MESES.find(mes => mes.mes === month);
+        arrData.push({
+            fecha: `${fecha}/${monthNumber?.id}`,
+            ventas
+        })
+    });
+    return arrData;
 }
