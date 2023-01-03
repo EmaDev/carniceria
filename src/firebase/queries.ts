@@ -1,13 +1,13 @@
 import { getFirestore, doc, getDoc, updateDoc, arrayUnion, arrayRemove, orderBy, query, collection, getDocs, where } from "firebase/firestore";
 import { app } from './config';
-import {MESES,DIA_ACTUAL,MES_ACTUAL} from '../helpers/index';
+import { MESES, DIA_ACTUAL, MES_ACTUAL } from '../helpers/index';
 const db = getFirestore(app);
 
 
 
 export const getVentasDelDia = async () => {
 
-    const docRef = doc(db, "carniceria", 'ventasNuevo', MES_ACTUAL, DIA_ACTUAL);
+    const docRef = doc(db, "carniceria", 'ventas2023', MES_ACTUAL, DIA_ACTUAL);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
@@ -19,8 +19,10 @@ export const getVentasDelDia = async () => {
 
 export const createNewSale = async (data: any) => {
 
+    console.log({ MES_ACTUAL, DIA_ACTUAL });
+    //return ;
     try {
-        const docRef = doc(db, "carniceria", "ventasNuevo", MES_ACTUAL, DIA_ACTUAL);
+        const docRef = doc(db, "carniceria", "ventas2023", MES_ACTUAL, DIA_ACTUAL);
         await updateDoc(docRef, {
             ventas: arrayUnion({
                 id: data.id,
@@ -31,12 +33,13 @@ export const createNewSale = async (data: any) => {
 
         return { ok: true };
     } catch (error) {
+        console.log(error);
         return { ok: false };
     }
 }
 
 export const removeSale = async (data: any) => {
-    const docRef = doc(db, "carniceria", "ventasNuevo", MES_ACTUAL, DIA_ACTUAL);
+    const docRef = doc(db, "carniceria", "ventas2023", MES_ACTUAL, DIA_ACTUAL);
 
     await updateDoc(docRef, {
         ventas: arrayRemove({
@@ -76,13 +79,14 @@ export const setPreciosCompra = async (data: any) => {
 
 export const getVentasPorMes = async (month: string) => {
 
-    const q = query(collection(db, "carniceria", "ventasNuevo", month), 
-    orderBy("fecha")/*, where("fecha", "<=", parseInt(DIA_ACTUAL))*/);
+    const q = query(collection(db, "carniceria", "ventas2023", month),
+        orderBy("fecha")/*, where("fecha", "<=", parseInt(DIA_ACTUAL))*/);
 
     const querySnapshot = await getDocs(q);
-    const arrData:any = [];
+    const arrData: any = [];
+    const total2022: number = 0;
     querySnapshot.forEach((doc) => {
-        const {fecha, ventas} = doc.data();
+        const { fecha, ventas } = doc.data();
         const monthNumber = MESES.find(mes => mes.mes === month);
         arrData.push({
             fecha: `${fecha}/${monthNumber?.id}`,
@@ -90,4 +94,18 @@ export const getVentasPorMes = async (month: string) => {
         })
     });
     return arrData;
+}
+
+export const getTodasLasVentasDel2022 = async () => {
+    const docRef = doc(db, "carniceria", "ventasNuevo");
+
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+        console.log(docSnap.data());
+    } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+    }
+
 }

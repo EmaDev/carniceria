@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { HiLockClosed, HiLockOpen } from 'react-icons/hi';
-import { getVentasPorMes } from '../firebase/queries';
+import { getTodasLasVentasDel2022, getVentasPorMes } from '../firebase/queries';
 import { MESES, totalCalculator } from '../helpers';
 
 const Container = styled.div`
@@ -67,6 +67,9 @@ export const HistorialDeVentas = () => {
         setVentasTotales(resp);
     }
 
+    const getTodasLasVentas = async() => {
+        await getTodasLasVentasDel2022();
+    }
     const calcularImporteTotal = (ventas: any[]) => {
         let importe = 0;
         if (ventas.length > 0) {
