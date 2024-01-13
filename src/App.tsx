@@ -1,5 +1,4 @@
 import { Body } from "./components/Body";
-import { Header } from "./components/Header";
 import { SalesContextPorvider } from "./context/SalesContext";
 
 function App() {
@@ -8,7 +7,9 @@ function App() {
       <div className="main">
         <Body />
       </div>
+      <h5 style={{textAlign: "center", fontFamily: "monospace"}}>Version: 2024</h5>
     </SalesContextPorvider>
+    
   );
 }
 
